@@ -26,21 +26,19 @@ class MainActivity : AppCompatActivity() {
     fun stop(){
         setalarm(-1,AlarmBroadcastReceiver.Alarmstop)
     }
-    fun setalarmtime(hour:Int, minute: Int){
+    fun setalarmtime(hour: Int, minute: Int){
         //card.visibility=View.GONE
         val alarmtime=Calendar.getInstance()
         val year=alarmtime.get(Calendar.YEAR)
         val month=alarmtime.get(Calendar.MONTH)
         val date=alarmtime.get(Calendar.DATE)
-        val minute=alarmtime.get(Calendar.MINUTE)
-        val hour=alarmtime.get(Calendar.HOUR)
-        alarmtime.set(year,month, date,minute)
-        setalarmtime(alarmtime.timeInMillis,AlarmBroadcastReceiver.Alarmstart)
+        alarmtime.set(year,month, date,hour,minute,0)
+        setalarm(alarmtime.timeInMillis,AlarmBroadcastReceiver.Alarmstart)
     }
     fun setalarm(militime:Long,action:String){
         val intentalarm=Intent(applicationContext,AlarmBroadcastReceiver::class.java)
         intentalarm.putExtra(AlarmBroadcastReceiver.Alarmkey,action)
-        val pendingIntent=PendingIntent.getBroadcast(applicationContext,4356,intentalarm,PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent=PendingIntent.getBroadcast(applicationContext,4356,intentalarm,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT )
         val alarmmanager=getSystemService(ALARM_SERVICE) as AlarmManager
         if (action==AlarmBroadcastReceiver.Alarmstart){
             alarmmanager.setExact(AlarmManager.RTC_WAKEUP,militime,pendingIntent)
